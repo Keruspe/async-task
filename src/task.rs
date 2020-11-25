@@ -381,3 +381,17 @@ impl<T> fmt::Debug for Task<T> {
             .finish()
     }
 }
+
+#[cfg(feature = "executor-trait")]
+mod executor_trait {
+    #[async_trait::async_trait(?Send)]
+    impl<T> executor_trait_crate::Task<T> for crate::Task<T> {
+        fn detach(self) {
+            self.detach();
+        }
+
+        async fn cancel(self) -> Option<T> {
+            self.cancel().await
+        }
+    }
+}
